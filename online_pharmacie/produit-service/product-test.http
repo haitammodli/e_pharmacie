@@ -1,0 +1,12 @@
+POST http://localhost:8081/products
+Content-Type: application/json
+
+{
+  "name": "Doliprane",
+  "description": "Pain reliever and fever reducer (Paracetamol 1000mg)",
+  "price": 18,
+  "quantity": 500,
+  "category": "Analgesic",
+  "manufacturer": "Sanofi"
+}
+
