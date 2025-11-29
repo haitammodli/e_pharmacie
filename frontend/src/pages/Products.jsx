@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -10,32 +10,35 @@ function Products() {
         if (data._embedded && data._embedded.products) {
           setProducts(data._embedded.products);
         } else {
-          console.error("Unexpected Spring Data REST format:", data);
           setProducts([]);
         }
       })
-      .catch(err => {
-        console.error("Fetch error:", err);
-        setProducts([]);
-      });
+      .catch(() => setProducts([]));
   }, []);
 
   return (
     <div>
       <h2>Products List</h2>
 
+      {/* ADD PRODUCT BUTTON */}
+      <Link to="/add-product">
+        <button className="btn btn-primary" style={{ marginBottom: "20px" }}>
+          ➕ Add New Product
+        </button>
+      </Link>
+
       {products.length === 0 ? (
         <p>No products available</p>
       ) : (
         <ul>
-             {products.map((p) => {
-             const id = p._links.self.href.split("/").pop(); // extract the ID
-           return (
-         <li key={id}>
-             {p.name} — {p.price} MAD
-         </li>
-           );
-         })}
+          {products.map((p) => {
+            const id = p._links.self.href.split("/").pop();
+            return (
+              <li key={id}>
+                {p.name} — {p.price} MAD
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
@@ -43,3 +46,4 @@ function Products() {
 }
 
 export default Products;
+import { useState, useEffect } from "react";

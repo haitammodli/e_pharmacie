@@ -1,32 +1,78 @@
 import { useState } from "react";
-import { getDelivery } from "../api/api";
+import { createDelivery, getDelivery } from "../api/api";
 
 export default function Delivery() {
-  const [id, setId] = useState("");
-  const [delivery, setDelivery] = useState(null);
+  // For creating new delivery
+  const [newDelivery, setNewDelivery] = useState({
+    orderId: "",
+    address: ""
+  });
 
-  const search = async () => {
-    const res = await getDelivery(id);
-    setDelivery(res);
+  // For searching delivery
+  const [searchId, setSearchId] = useState("");
+  const [deliveryResult, setDeliveryResult] = useState(null);
+
+  const handleCreate = async (e) => {
+    e.preventDefault();
+
+    const res = await createDelivery(newDelivery);
+    alert("Delivery created! ID: " + res.id);
+    setNewDelivery({ orderId: "", address: "" });
+  };
+
+  const handleSearch = async () => {
+    const res = await getDelivery(searchId);
+    setDeliveryResult(res);
   };
 
   return (
-    <div style={{padding: 20}}>
+    <div className="container">
+
+      {/* CREATE DELIVERY */}
+      <h2>Create Delivery</h2>
+
+      <form onSubmit={handleCreate}>
+        <input
+          placeholder="Order ID"
+          type="number"
+          value={newDelivery.orderId}
+          onChange={(e) =>
+            setNewDelivery({ ...newDelivery, orderId: e.target.value })
+          }
+        />
+
+        <input
+          placeholder="Address"
+          value={newDelivery.address}
+          onChange={(e) =>
+            setNewDelivery({ ...newDelivery, address: e.target.value })
+          }
+        />
+
+        <button className="btn btn-primary">Create Delivery</button>
+      </form>
+
+      <hr style={{ margin: "40px 0" }} />
+
+      {/* TRACK DELIVERY */}
       <h2>Track Delivery</h2>
 
       <input
         placeholder="Delivery ID"
-        value={id}
-        onChange={e => setId(e.target.value)}
+        value={searchId}
+        onChange={(e) => setSearchId(e.target.value)}
       />
-      <button onClick={search}>Search</button>
 
-      {delivery && (
-        <div style={{marginTop: 20}}>
-          <p><b>Status:</b> {delivery.status}</p>
-          <p><b>Lat:</b> {delivery.latitude}</p>
-          <p><b>Lon:</b> {delivery.longitude}</p>
-          <p><b>ETA:</b> {delivery.estimatedTime}</p>
+      <button className="btn btn-primary" style={{ marginTop: 10 }} onClick={handleSearch}>
+        Search
+      </button>
+
+      {deliveryResult && (
+        <div className="card">
+          <p><b>Status:</b> {deliveryResult.status}</p>
+          <p><b>Latitude:</b> {deliveryResult.latitude}</p>
+          <p><b>Longitude:</b> {deliveryResult.longitude}</p>
+          <p><b>ETA:</b> {deliveryResult.estimatedTime}</p>
         </div>
       )}
     </div>

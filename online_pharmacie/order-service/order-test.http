@@ -6,7 +6,7 @@ Content-Type: application/json
   "customerEmail": "haitam@gmail.com",
   "items": [
     {
-      "productId": 2,
+      "productId": 1,
       "quantity": 8
     }
   ]
